@@ -1,6 +1,6 @@
-# React + TypeScript + Vite
+# Blue Bird Dentools - Dental Equipment Services & Sales
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Professional dental clinic sales and technical repair services exclusively for Andhra Pradesh & Telangana.
 
 Currently, two official plugins are available:
 
