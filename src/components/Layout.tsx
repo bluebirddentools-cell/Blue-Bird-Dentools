@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './Navbar';
@@ -7,6 +7,10 @@ import WhatsAppSticky from './WhatsAppSticky';
 
 const Layout: React.FC = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-800">
