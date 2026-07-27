@@ -136,9 +136,9 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Sales Card */}
             <motion.div 
-              viewport={{ once: true, margin: '-100px' }}
-              initial="hidden"
-              whileInView="visible"
+              viewport={{ once: true }}
+              initial="visible"
+              animate="visible"
               variants={fadeInUp}
               whileHover={{ y: -8 }}
               className="relative p-8 rounded-2xl bg-gradient-to-br from-primary-50 to-white border border-primary-100 shadow-xl overflow-hidden group"
@@ -164,9 +164,9 @@ const Home: React.FC = () => {
 
             {/* Repair & Servicing Card */}
             <motion.div 
-              viewport={{ once: true, margin: '-100px' }}
-              initial="hidden"
-              whileInView="visible"
+              viewport={{ once: true }}
+              initial="visible"
+              animate="visible"
               variants={fadeInUp}
               whileHover={{ y: -8 }}
               className="relative p-8 rounded-2xl bg-gradient-to-br from-cyan-50/50 to-white border border-cyan-100/70 shadow-xl overflow-hidden group"
@@ -204,8 +204,8 @@ const Home: React.FC = () => {
 
           <motion.div 
             viewport={{ once: true }}
-            initial="hidden"
-            whileInView="visible"
+            initial="visible"
+            animate="visible"
             variants={staggerContainer}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"
           >
