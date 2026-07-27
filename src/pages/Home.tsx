@@ -86,7 +86,7 @@ const Home: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="mt-6 text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl"
             >
-              Empowering dental practitioners across Telangana and Andhra Pradesh with world-class dental machinery, authorized spare parts, and prompt calibration and breakdown maintenance.
+              Empowering dental practitioners across Andhra Pradesh and Telangana with world-class dental machinery, authorized spare parts, and prompt calibration and breakdown maintenance.
             </motion.p>
 
             {/* Regional Notice Alert */}
@@ -97,7 +97,7 @@ const Home: React.FC = () => {
               className="mt-6 flex items-start space-x-3 bg-cyan-950/60 border border-cyan-500/30 p-4 rounded-xl text-slate-200 text-xs sm:text-sm font-semibold max-w-2xl"
             >
               <span className="flex-shrink-0 inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse mt-1.5" />
-              <span>Regional Coverage Notice: Our equipment sales, installations, and technical repair services are available exclusively for dental clinics and laboratories in <strong>Telangana</strong> and <strong>Andhra Pradesh</strong>.</span>
+              <span>Regional Coverage Notice: Our equipment sales, installations, and technical repair services are available exclusively for dental clinics and laboratories in <strong>Andhra Pradesh</strong> and <strong>Telangana</strong>.</span>
             </motion.div>
             
             <motion.div 

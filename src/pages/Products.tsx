@@ -289,7 +289,7 @@ const Products: React.FC = () => {
             </svg>
           </div>
           <div>
-            <span className="font-bold text-primary-950">Regional Availability Notice:</span> Equipment delivery, installation, and on-site repair services are exclusively available for clinics and dental labs located in <strong>Telangana</strong> and <strong>Andhra Pradesh</strong>.
+            <span className="font-bold text-primary-950">Regional Availability Notice:</span> Equipment delivery, installation, and on-site repair services are exclusively available for clinics and dental labs located in <strong>Andhra Pradesh</strong> and <strong>Telangana</strong>.
           </div>
         </div>
 

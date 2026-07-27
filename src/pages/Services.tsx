@@ -178,7 +178,7 @@ const Services: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <span className="font-bold text-primary-950">Notice:</span> Technical dispatches and engineering repair support are available exclusively within <strong>Telangana</strong> and <strong>Andhra Pradesh</strong>.
+                  <span className="font-bold text-primary-950">Notice:</span> Technical dispatches and engineering repair support are available exclusively within <strong>Andhra Pradesh</strong> and <strong>Telangana</strong>.
                 </div>
               </div>
               
