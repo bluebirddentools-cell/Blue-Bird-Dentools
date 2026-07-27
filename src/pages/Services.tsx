@@ -103,7 +103,7 @@ const Services: React.FC = () => {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl font-extrabold text-primary-900 tracking-tight">Dental Repair & Maintenance Services</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary-900 tracking-tight">Dental Repair & Maintenance Services</h1>
           <p className="mt-4 text-slate-500">
             We provide responsive clinical repairs, preventative maintenance contracts, and ISO-certified calibrations to keep your dental equipment fully operational.
           </p>
@@ -118,7 +118,7 @@ const Services: React.FC = () => {
             
             <div className="space-y-6">
               {offerings.map((offer, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-md hover:border-cyan-450 hover:shadow-lg transition-all duration-300">
+                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-md hover:border-cyan-500 hover:shadow-lg transition-all duration-300">
                   <div className="flex flex-col sm:flex-row items-start gap-6">
                     {/* Visual thumbnail container */}
                     <div className="w-20 h-20 rounded-xl bg-slate-50 border border-slate-100 p-2 shrink-0 flex items-center justify-center overflow-hidden shadow-inner self-center sm:self-start">
@@ -135,7 +135,7 @@ const Services: React.FC = () => {
                       
                       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         {offer.specs.map((spec, specIdx) => (
-                          <div key={specIdx} className="flex items-center text-xs text-slate-650">
+                          <div key={specIdx} className="flex items-center text-xs text-slate-600">
                             <CheckCircle className="h-4 w-4 text-cyan-500 mr-2 shrink-0" />
                             <span>{spec}</span>
                           </div>
@@ -149,7 +149,7 @@ const Services: React.FC = () => {
 
             {/* Emergency Info Banner */}
             <div className="bg-red-50 border border-red-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-              <div className="p-3 bg-red-100 text-red-650 rounded-xl shrink-0">
+              <div className="p-3 bg-red-100 text-red-600 rounded-xl shrink-0">
                 <ShieldAlert className="h-6 w-6" />
               </div>
               <div className="text-center sm:text-left">
@@ -157,7 +157,7 @@ const Services: React.FC = () => {
                 <p className="mt-1 text-xs text-red-800 leading-relaxed">
                   If you are experiencing an immediate equipment failure halting surgery (e.g. air compressor shutdown, dental chair hydraulics lock), contact our emergency hotline immediately.
                 </p>
-                <a href="tel:+919000280015" className="mt-3 inline-flex items-center text-sm font-bold text-red-900 hover:text-red-750">
+                <a href="tel:+919000280015" className="mt-3 inline-flex items-center text-sm font-bold text-red-900 hover:text-red-700">
                   Call +91 9000280015
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </a>
@@ -218,7 +218,7 @@ const Services: React.FC = () => {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Phone Number</label>
                         <input
@@ -258,7 +258,7 @@ const Services: React.FC = () => {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Service Requested</label>
                         <select
@@ -329,7 +329,7 @@ const Services: React.FC = () => {
                     </p>
                     <button
                       onClick={() => setIsSubmitted(false)}
-                      className="mt-6 inline-flex justify-center px-4 py-2.5 text-xs font-bold rounded-xl text-slate-650 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all"
+                      className="mt-6 inline-flex justify-center px-4 py-2.5 text-xs font-bold rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all"
                     >
                       Submit Another Request
                     </button>
@@ -338,7 +338,7 @@ const Services: React.FC = () => {
               </AnimatePresence>
 
               {/* Security Badge */}
-              <div className="mt-6 pt-6 border-t border-slate-100 flex items-center space-x-2 text-[10px] font-bold text-slate-450 uppercase tracking-widest justify-center">
+              <div className="mt-6 pt-6 border-t border-slate-100 flex items-center space-x-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest justify-center">
                 <Shield className="h-4 w-4 text-cyan-500" />
                 <span>Encrypted Clinical Ticket Dispatch</span>
               </div>

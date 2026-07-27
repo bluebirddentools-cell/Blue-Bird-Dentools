@@ -114,7 +114,7 @@ const Contact: React.FC = () => {
 
         {/* Title */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl font-extrabold text-primary-900 tracking-tight">Contact & Quote Inquiry</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary-900 tracking-tight">Contact & Quote Inquiry</h1>
           <p className="mt-4 text-slate-500">
             Submit a direct equipment sales query, request customized clinic configuration quotes, or schedule maintenance dispatches for your existing hardware.
           </p>
@@ -127,7 +127,7 @@ const Contact: React.FC = () => {
           <div className="lg:col-span-4 flex flex-col justify-between space-y-8">
             <div className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-lg space-y-8 flex-grow">
               <h2 className="text-xl font-bold text-primary-900">Clinical Support Desk</h2>
-              <p className="text-sm text-slate-450 leading-relaxed">
+              <p className="text-sm text-slate-500 leading-relaxed">
                 Connect with our service dispatcher or clinical sales representatives. Our teams respond to inquiries within 1 business day.
               </p>
 
@@ -166,7 +166,7 @@ const Contact: React.FC = () => {
                       href="https://maps.app.goo.gl/6bWMvmJ5ABrzbZnaA"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-slate-650 hover:text-cyan-600 font-medium leading-relaxed block"
+                      className="text-sm text-slate-600 hover:text-cyan-600 font-medium leading-relaxed block"
                     >
                       Blue Bird Dentools City Market Shop Number 137, Opposite Maruti Suzuki Showroom, Kakani Road, Guntur-522001, Andhra Pradesh
                     </a>
@@ -347,12 +347,12 @@ const Contact: React.FC = () => {
                         <CheckCircle2 className="h-12 w-12" />
                       </div>
                       <h3 className="text-2xl font-bold text-primary-900">Inquiry Received Successfully</h3>
-                      <p className="mt-4 text-slate-550 text-sm leading-relaxed max-w-md">
+                      <p className="mt-4 text-slate-500 text-sm leading-relaxed max-w-md">
                         Thank you for contacting Blue Bird Dentools. Your ticket has been dispatched. A clinic consultant or service coordinator will contact you by phone or email within 24 hours.
                       </p>
                       <button
                         onClick={() => setIsSubmitted(false)}
-                        className="mt-8 inline-flex justify-center px-4 py-2.5 text-xs font-bold rounded-xl text-slate-650 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all"
+                        className="mt-8 inline-flex justify-center px-4 py-2.5 text-xs font-bold rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all"
                       >
                         Submit Another Inquiry
                       </button>
@@ -362,7 +362,7 @@ const Contact: React.FC = () => {
               </div>
 
               {/* Data Compliance Info */}
-              <div className="mt-8 pt-4 border-t border-slate-100 flex items-center space-x-2 text-[10px] font-bold text-slate-450 uppercase tracking-widest justify-center">
+              <div className="mt-8 pt-4 border-t border-slate-100 flex items-center space-x-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest justify-center">
                 <ShieldCheck className="h-4 w-4 text-cyan-500 animate-pulse" />
                 <span>HIPAA-Compliant & Secure Data Routing</span>
               </div>

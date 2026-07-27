@@ -122,73 +122,77 @@ const Navbar: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Mobile Drawer Menu */}
-        <AnimatePresence>
-          {isOpen && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={toggleMenu}
-                className="fixed inset-0 top-[96px] bg-slate-900/50 backdrop-blur-sm z-40 md:hidden"
-              />
-              {/* Content Drawer */}
-              <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'tween', duration: 0.3 }}
-                className="fixed right-0 top-[96px] bottom-0 w-4/5 max-w-sm bg-white shadow-2xl z-50 p-6 flex flex-col justify-between md:hidden"
-              >
-                <div className="space-y-6">
-                  <div className="flex flex-col space-y-4">
-                    {navLinks.map((link) => {
-                      const isActive = location.pathname === link.path;
-                      return (
-                        <Link
-                          key={link.path}
-                          to={link.path}
-                          onClick={toggleMenu}
-                          className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all ${
-                            isActive
-                              ? 'bg-primary-550 text-white border-l-4 border-cyan-400'
-                              : 'text-slate-600 hover:bg-slate-50 hover:text-primary-900'
-                          }`}
-                        >
-                          {link.name}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="space-y-4 border-t border-slate-100 pt-6">
-                  <div className="flex items-center space-x-3 text-slate-600">
-                    <Phone className="h-5 w-5 text-cyan-500" />
-                    <div>
-                      <p className="text-xs text-slate-400 font-medium">Service Hotline</p>
-                      <a href="tel:+919000280015" className="text-sm font-bold text-primary-900 hover:text-cyan-600">
-                        +91 9000280015
-                      </a>
-                    </div>
-                  </div>
-                  <Link
-                    to="/contact?type=quote"
-                    onClick={toggleMenu}
-                    className="w-full flex items-center justify-center px-4 py-3 text-base font-bold rounded-xl text-white bg-primary-900 hover:bg-cyan-600 active:scale-95 transition-all shadow-lg"
-                  >
-                    <FileText className="h-5 w-5 mr-2" />
-                    Request Quote
-                  </Link>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
       </nav>
+
+      {/* Mobile Drawer Menu - Moved outside <nav> to prevent backdrop-filter containing block issues */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={toggleMenu}
+              className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 ${
+                isScrolled ? 'top-[100px]' : 'top-[116px]'
+              }`}
+            />
+            {/* Content Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className={`fixed right-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl z-50 p-6 flex flex-col justify-between md:hidden transition-all duration-300 ${
+                isScrolled ? 'top-[100px]' : 'top-[116px]'
+              }`}
+            >
+              <div className="space-y-6">
+                <div className="flex flex-col space-y-4">
+                  {navLinks.map((link) => {
+                    const isActive = location.pathname === link.path;
+                    return (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={toggleMenu}
+                        className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                          isActive
+                            ? 'bg-primary-900 text-white border-l-4 border-cyan-400'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-primary-900'
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="space-y-4 border-t border-slate-100 pt-6">
+                <div className="flex items-center space-x-3 text-slate-600">
+                  <Phone className="h-5 w-5 text-cyan-500" />
+                  <div>
+                    <p className="text-xs text-slate-400 font-medium">Service Hotline</p>
+                    <a href="tel:+919000280015" className="text-sm font-bold text-primary-900 hover:text-cyan-600">
+                      +91 9000280015
+                    </a>
+                  </div>
+                </div>
+                <Link
+                  to="/contact?type=quote"
+                  onClick={toggleMenu}
+                  className="w-full flex items-center justify-center px-4 py-3 text-base font-bold rounded-xl text-white bg-primary-900 hover:bg-cyan-600 active:scale-95 transition-all shadow-lg"
+                >
+                  <FileText className="h-5 w-5 mr-2" />
+                  Request Quote
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

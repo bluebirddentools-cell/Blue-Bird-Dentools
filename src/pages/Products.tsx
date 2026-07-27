@@ -274,7 +274,7 @@ const Products: React.FC = () => {
         
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h1 className="text-4xl font-extrabold text-primary-900 tracking-tight">Dental Equipment Catalog</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary-900 tracking-tight">Dental Equipment Catalog</h1>
           <p className="mt-4 text-slate-500">
             Browse our clinical inventory of genuine, certified equipment. All hardware includes standard warranties and is backed by our expert repair team.
           </p>
@@ -411,7 +411,7 @@ const Products: React.FC = () => {
                   </div>
 
                   <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
-                    <span className="text-xs font-semibold text-slate-400 flex items-center bg-slate-50 border border-slate-150 px-2 py-1 rounded">
+                    <span className="text-xs font-semibold text-slate-400 flex items-center bg-slate-50 border border-slate-200 px-2 py-1 rounded">
                       <HelpCircle className="h-3.5 w-3.5 mr-1 text-cyan-500" />
                       Inquire Price
                     </span>
@@ -493,7 +493,7 @@ const Products: React.FC = () => {
                 {/* Close Button */}
                 <button
                   onClick={handleCloseLightbox}
-                  className="p-2.5 bg-slate-800/80 hover:bg-red-650 hover:text-white rounded-xl transition-all shadow-md active:scale-95"
+                  className="p-2.5 bg-slate-800/80 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-md active:scale-95"
                   title="Close (Esc)"
                 >
                   <X className="h-5 w-5" />

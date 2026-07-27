@@ -43,7 +43,7 @@ const About: React.FC = () => {
               <Award className="h-4 w-4 text-cyan-500" />
               <span>Who We Are</span>
             </div>
-            <h1 className="text-4xl font-extrabold text-primary-900 tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary-900 tracking-tight leading-tight">
               Supporting Dental Professionals With Premium Equipment & Engineering Precision
             </h1>
             <p className="text-slate-500 leading-relaxed">
@@ -53,7 +53,7 @@ const About: React.FC = () => {
               We understand that clinical downtime translates directly to disrupted patient care. That is why our business model bridges high-quality dental chair and diagnostic instrument sales with a highly responsive, certified service department.
             </p>
 
-            <div className="grid grid-cols-2 gap-6 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
               <div className="p-4 bg-white rounded-xl border border-slate-200/60 shadow-md">
                 <Target className="h-6 w-6 text-cyan-500 mb-2" />
                 <h4 className="font-bold text-primary-900 text-sm">Our Mission</h4>
@@ -110,7 +110,7 @@ const About: React.FC = () => {
         <div className="mb-24">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Our Philosophy</h2>
-            <p className="mt-2 text-3xl font-extrabold text-primary-900">The Values Directing Our Team</p>
+            <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-primary-900">The Values Directing Our Team</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -122,7 +122,7 @@ const About: React.FC = () => {
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="text-base font-bold text-primary-900">{v.title}</h3>
-                  <p className="mt-2 text-xs text-slate-550 leading-relaxed">{v.desc}</p>
+                  <p className="mt-2 text-xs text-slate-500 leading-relaxed">{v.desc}</p>
                 </div>
               );
             })}
@@ -133,7 +133,7 @@ const About: React.FC = () => {
         <div>
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Timeline</h2>
-            <p className="mt-2 text-3xl font-extrabold text-primary-900">Milestones of Operations</p>
+            <p className="mt-2 text-2xl sm:text-3xl font-extrabold text-primary-900">Milestones of Operations</p>
           </div>
 
           <div className="relative border-l-2 border-slate-200 ml-4 md:ml-32 space-y-12">

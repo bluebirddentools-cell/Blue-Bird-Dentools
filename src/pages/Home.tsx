@@ -96,7 +96,7 @@ const Home: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.25 }}
               className="mt-6 flex items-start space-x-3 bg-cyan-950/60 border border-cyan-500/30 p-4 rounded-xl text-slate-200 text-xs sm:text-sm font-semibold max-w-2xl"
             >
-              <span className="flex-shrink-0 inline-block w-2.5 h-2.5 rounded-full bg-cyan-450 animate-pulse mt-1.5" />
+              <span className="flex-shrink-0 inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse mt-1.5" />
               <span>Regional Coverage Notice: Our equipment sales, installations, and technical repair services are available exclusively for dental clinics and laboratories in <strong>Telangana</strong> and <strong>Andhra Pradesh</strong>.</span>
             </motion.div>
             
