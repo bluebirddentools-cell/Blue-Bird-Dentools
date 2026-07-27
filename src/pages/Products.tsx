@@ -358,13 +358,13 @@ const Products: React.FC = () => {
                 {/* Visual Image/Gradient Box */}
                 <div 
                   onClick={() => product.image && handleOpenLightbox(product)}
-                  className={`h-48 relative flex items-center justify-center overflow-hidden bg-slate-50 border-b border-slate-100 ${product.image ? 'cursor-zoom-in' : ''}`}
+                  className={`h-52 relative flex items-center justify-center overflow-hidden bg-slate-100 border-b border-slate-100 ${product.image ? 'cursor-zoom-in' : ''}`}
                 >
                   {product.image ? (
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="w-full h-full object-contain p-4 hover:scale-105 transition-transform duration-500" 
+                      className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
                     />
                   ) : (
                     <>
@@ -521,11 +521,13 @@ const Products: React.FC = () => {
                   className="flex items-center justify-center p-4 max-w-full max-h-full cursor-grab active:cursor-grabbing transition-transform duration-200"
                   style={{ transform: `scale(${zoomScale})` }}
                 >
-                  <img
-                    src={lightboxProduct.image}
-                    alt={lightboxProduct.name}
-                    className="max-w-[90vw] max-h-[65vh] object-contain select-none pointer-events-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.4)]"
-                  />
+                  <div className="bg-white p-6 rounded-2xl shadow-2xl border border-slate-700/40 max-w-[90vw] max-h-[65vh] flex items-center justify-center">
+                    <img
+                      src={lightboxProduct.image}
+                      alt={lightboxProduct.name}
+                      className="max-w-full max-h-[55vh] object-contain select-none pointer-events-none mix-blend-multiply"
+                    />
+                  </div>
                 </div>
               </div>
 

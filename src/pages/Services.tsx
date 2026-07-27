@@ -121,11 +121,11 @@ const Services: React.FC = () => {
                 <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-md hover:border-cyan-500 hover:shadow-lg transition-all duration-300">
                   <div className="flex flex-col sm:flex-row items-start gap-6">
                     {/* Visual thumbnail container */}
-                    <div className="w-20 h-20 rounded-xl bg-slate-50 border border-slate-100 p-2 shrink-0 flex items-center justify-center overflow-hidden shadow-inner self-center sm:self-start">
+                    <div className="w-20 h-20 rounded-xl bg-white border border-slate-100 p-2 shrink-0 flex items-center justify-center overflow-hidden shadow-sm self-center sm:self-start">
                       <img 
                         src={offer.image} 
                         alt={offer.title} 
-                        className="max-h-full max-w-full object-contain hover:scale-110 transition-transform duration-300"
+                        className="max-h-full max-w-full object-contain mix-blend-multiply hover:scale-110 transition-transform duration-300"
                       />
                     </div>
                     
