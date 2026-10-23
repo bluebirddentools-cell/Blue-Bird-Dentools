@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden xl:flex items-center space-x-8">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Desktop CTA & Support */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden xl:flex items-center space-x-4">
               <a
                 href="tel:+919000280015"
                 className="flex items-center space-x-2 text-slate-600 hover:text-cyan-600 transition-colors"
@@ -124,7 +124,7 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center space-x-2 sm:space-x-4">
+            <div className="flex xl:hidden items-center space-x-2 sm:space-x-4">
               <a
                 href="tel:+919000280015"
                 aria-label="Call +91 9000280015"
@@ -157,7 +157,7 @@ const Navbar: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={toggleMenu}
-              className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-all duration-300 ${
+              className={`fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 xl:hidden transition-all duration-300 ${
                 isScrolled ? 'top-[100px]' : 'top-[116px]'
               }`}
             />
@@ -168,7 +168,7 @@ const Navbar: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className={`fixed right-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl z-50 p-6 flex flex-col justify-between md:hidden transition-all duration-300 ${
+              className={`fixed right-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl z-50 p-6 flex flex-col justify-between xl:hidden overflow-y-auto pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-all duration-300 ${
                 isScrolled ? 'top-[100px]' : 'top-[116px]'
               }`}
             >
