@@ -2,206 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, ArrowRight, ShieldCheck, HelpCircle, ZoomIn, ZoomOut, RotateCcw, X, ChevronLeft, ChevronRight } from 'lucide-react';
-
-interface Product {
-  id: string;
-  name: string;
-  category: 'furniture' | 'imaging' | 'sterilization' | 'handpieces' | 'essentials';
-  categoryLabel: string;
-  description: string;
-  specs: string[];
-  inStock: boolean;
-  modelCode: string;
-  image?: string;
-}
-
-const PRODUCTS_DATA: Product[] = [
-  // Furniture & Units
-  {
-    id: 'dental-chair',
-    name: 'Premium Dental Chair',
-    category: 'furniture',
-    categoryLabel: 'Furniture & Units',
-    description: 'Premium dental chair engineered for maximum operator comfort and superior patient support with memory positioning.',
-    specs: ['Ergonomic high-density foam upholstery', 'Quiet electro-pneumatic motor control', 'Double-articulating headrest', 'Programmable positions (4 preset + auto-return)'],
-    inStock: true,
-    modelCode: 'BBD-CH800',
-    image: '/images/dental_chair.png'
-  },
-  {
-    id: 'portable-unit',
-    name: 'Portable Dental Unit',
-    category: 'furniture',
-    categoryLabel: 'Furniture & Units',
-    description: 'Fully mobile dental cabinet system designed for field work, mobile clinics, and emergency hospital services.',
-    specs: ['Self-contained system with silent air compressor', 'Clean water bottle supply system', 'High and low speed handpiece connections', 'Saliva ejector and 3-way syringe'],
-    inStock: true,
-    modelCode: 'BBD-PU40',
-    image: '/images/portable_unit.png'
-  },
-  // Imaging & Diagnostics
-  {
-    id: 'wallmount-xray',
-    name: 'Wallmount DC X-Ray',
-    category: 'imaging',
-    categoryLabel: 'Imaging & Diagnostics',
-    description: 'Robust clinical intraoral x-ray machine delivering crisp, high-definition digital radiography diagnostics with minimal dose.',
-    specs: ['High-frequency DC generator (70kV)', 'Microprocessor-controlled exposure panel', 'Scissors-type arm with smooth fluid movement', 'Zero-radiation leakage design'],
-    inStock: true,
-    modelCode: 'BBD-WX70',
-    image: '/images/wallmount_xray.png'
-  },
-  {
-    id: 'portable-xray',
-    name: 'Portable Handheld X-Ray',
-    category: 'imaging',
-    categoryLabel: 'Imaging & Diagnostics',
-    description: 'Ultra-portable dental X-Ray device for chairside radiographic exposures without moving the patient.',
-    specs: ['Lightweight hand-held design (2.1 kg)', 'Double lead-shielded radiation protection', 'Long-lasting rechargeable Li-ion battery', 'High contrast LCD screen interface'],
-    inStock: true,
-    modelCode: 'BBD-PX22',
-    image: '/images/portable_xray.png'
-  },
-  // Sterilization & Hygiene
-  {
-    id: 'bclass-autoclave',
-    name: 'B-Class Autoclave',
-    category: 'sterilization',
-    categoryLabel: 'Sterilization & Hygiene',
-    description: 'Medical-grade steam sterilizer offering absolute decontamination protocols for wrapped and unwrapped tools.',
-    specs: ['Fractionated vacuum sterilization (Class B)', 'Built-in microprinter and USB data logging', 'Triple safety lock chamber door', 'Advanced bacteriological filter'],
-    inStock: true,
-    modelCode: 'BBD-AC23',
-    image: '/images/bclass_autoclave.png'
-  },
-  {
-    id: 'uv-chamber',
-    name: 'UV Instrument Chamber',
-    category: 'sterilization',
-    categoryLabel: 'Sterilization & Hygiene',
-    description: 'Reliable dry storage chamber designed to preserve sterile instruments after autoclaving.',
-    specs: ['High-output germicidal UV-C tube (15W)', 'Stainless steel non-magnetic rustless trays', 'Safety door auto-cutoff switch', 'Microprocessor timer controller'],
-    inStock: true,
-    modelCode: 'BBD-UV18',
-    image: '/images/uv_chamber.png'
-  },
-  // Handpieces & Motors
-  {
-    id: 'straight-contra-angle',
-    name: 'Straight & Contra-Angle Handpiece Set',
-    category: 'handpieces',
-    categoryLabel: 'Handpieces & Motors',
-    description: 'Precision dental handpieces offering ultra-low vibration and high reliability for standard clinical routines.',
-    specs: ['Internal water spray systems', '1:1 direct transmission speed ratio', 'Stainless steel lightweight sleeve design', 'Autoclavable up to 135°C'],
-    inStock: true,
-    modelCode: 'BBD-HP200',
-    image: '/images/straight_contra_angle.png'
-  },
-  {
-    id: 'airotor-handpiece',
-    name: 'Super-Torque Airotor Handpiece',
-    category: 'handpieces',
-    categoryLabel: 'Handpieces & Motors',
-    description: 'Advanced turbine speed handpiece providing exceptional torque and cooling safety for tooth preparation.',
-    specs: ['High-speed ceramic ball bearings (350k RPM)', 'Super-torque triple-port water spray', 'Push-button bur chuck system', 'Fiber optic light integration option'],
-    inStock: true,
-    modelCode: 'BBD-AH90',
-    image: '/images/airotor_handpiece.png'
-  },
-  {
-    id: 'cordless-endo-motor',
-    name: 'Cordless Endo Motor',
-    category: 'handpieces',
-    categoryLabel: 'Handpieces & Motors',
-    description: 'Smart cordless endodontic motor with precise speed control and built-in apex locator compatibility.',
-    specs: ['Continuous rotation & reciprocating modes', 'Pre-set file systems library (10 programs)', 'Auto-torque reverse and stop trigger', 'Miniature 16:1 contra-angle head'],
-    inStock: true,
-    modelCode: 'BBD-EM15',
-    image: '/images/cordless_endo_motor.png'
-  },
-  {
-    id: 'lab-micro-motor',
-    name: 'Lab Micro Motor & Control Box',
-    category: 'handpieces',
-    categoryLabel: 'Handpieces & Motors',
-    description: 'Heavy-duty laboratory motor and benchtop console for precise model finishing, grinding, and polishing.',
-    specs: ['High torque speed up to 50,000 RPM', 'Foot speed control pedal included', 'Forward/Reverse rotation directions', 'Overload protection mechanism'],
-    inStock: true,
-    modelCode: 'BBD-LM50',
-    image: '/images/lab_micro_motor.png'
-  },
-  {
-    id: 'micro-motor-handpiece',
-    name: 'Clinical Micro Motor',
-    category: 'handpieces',
-    categoryLabel: 'Handpieces & Motors',
-    description: 'Standard clinic dental micro motor delivering reliable power for low-speed dental operations.',
-    specs: ['E-type ISO connection fitting', 'Speed range 2,000 - 35,000 RPM', 'Low noise, carbon-brush motor system', 'Compatible with straight/contra-angle heads'],
-    inStock: true,
-    modelCode: 'BBD-MM35',
-    image: '/images/micro_motor_handpiece.png'
-  },
-  {
-    id: 'airotor-cartridges',
-    name: 'Airotor Turbine Cartridges',
-    category: 'handpieces',
-    categoryLabel: 'Handpieces & Motors',
-    description: 'Direct replacement high-speed cartridge units for servicing standard dental turbine handpieces.',
-    specs: ['High grade balanced turbine impellers', 'Heat-treated stainless steel spindle', 'Premium ceramic bearings', 'Anti-retraction system compatible'],
-    inStock: true,
-    modelCode: 'BBD-ATC08',
-    image: '/images/airotor_cartridges.png'
-  },
-  // Essentials & Utilities
-  {
-    id: 'scaler-unit',
-    name: 'Ultrasonic Piezo Scaler',
-    category: 'essentials',
-    categoryLabel: 'Essentials & Utilities',
-    description: 'Advanced scaling unit for plaque and calculus removal with comfortable clinical performance.',
-    specs: ['Piezoelectric ultrasonic vibration system', 'Autoclavable handpiece sleeve', 'Feedback control tracking frequency', 'Includes 5 scaler tips + wrench'],
-    inStock: true,
-    modelCode: 'BBD-SC12',
-    image: '/images/scaler_unit.png'
-  },
-  {
-    id: 'curing-light',
-    name: 'Broad-Spectrum LED Curing Light',
-    category: 'essentials',
-    categoryLabel: 'Essentials & Utilities',
-    description: 'High-power ergonomic curing light for fast polymerization of composites, sealants, and adhesives.',
-    specs: ['Broad-spectrum blue LED (1200mW/cm²)', 'Multiple modes (Fast, Ramp, Pulse)', 'Cordless design with charging base', 'Long-lasting battery (up to 200 cycles)'],
-    inStock: true,
-    modelCode: 'BBD-CL10',
-    image: '/images/curing_light.png'
-  },
-  {
-    id: 'noiseless-compressor',
-    name: 'Noiseless Air Compressor',
-    category: 'essentials',
-    categoryLabel: 'Essentials & Utilities',
-    description: 'Medical air compressor supplying clean, dry, oil-free compressed air for up to two dental chairs.',
-    specs: ['Oil-free clean air delivery', 'Low noise profile (55 dB)', 'Epoxy-coated internal tank (35L)', 'Dual auto-pressure shutoff switch'],
-    inStock: true,
-    modelCode: 'BBD-AC35',
-    image: '/images/noiseless_compressor.png'
-  }
-];
-
-const CATEGORIES = [
-  { code: 'all', label: 'All Equipment' },
-  { code: 'furniture', label: 'Furniture & Units' },
-  { code: 'imaging', label: 'Imaging & Diagnostics' },
-  { code: 'sterilization', label: 'Sterilization & Hygiene' },
-  { code: 'handpieces', label: 'Handpieces & Motors' },
-  { code: 'essentials', label: 'Essentials & Utilities' }
-];
+import { Swiper, SwiperSlide } from 'swiper/react';
+import type { Swiper as SwiperType } from 'swiper';
+import { Zoom, Navigation, Keyboard, Thumbs, FreeMode, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/zoom';
+import 'swiper/css/thumbs';
+import 'swiper/css/free-mode';
+import { PRODUCTS_DATA, CATEGORIES, type Product } from '../data/products';
+import Seo from '../components/Seo';
 
 const Products: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [lightboxProduct, setLightboxProduct] = useState<Product | null>(null);
-  const [zoomScale, setZoomScale] = useState(1);
   
   const currentCategory = searchParams.get('category') || 'all';
 
@@ -213,51 +26,47 @@ const Products: React.FC = () => {
     return matchesCategory && matchesSearch;
   });
 
+  // Lightbox is a Swiper gallery over the currently filtered products (zoom, swipe, arrows, keyboard, thumbs)
+  const gallery = filteredProducts.filter((p) => p.image);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [zoomScale, setZoomScale] = useState(1);
+  const [mainSwiper, setMainSwiper] = useState<SwiperType | null>(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+  const lightboxProduct = lightboxIndex === null ? null : gallery[activeIndex] ?? null;
+
   const handleOpenLightbox = (product: Product) => {
-    setLightboxProduct(product);
+    const idx = gallery.findIndex((p) => p.id === product.id);
+    if (idx === -1) return;
+    setLightboxIndex(idx);
+    setActiveIndex(idx);
     setZoomScale(1);
   };
 
   const handleCloseLightbox = () => {
-    setLightboxProduct(null);
-    setZoomScale(1);
+    setLightboxIndex(null);
+    setThumbsSwiper(null);
+    setMainSwiper(null);
   };
 
-  const handleNextLightbox = (e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    if (!lightboxProduct) return;
-    const activeList = filteredProducts.filter(p => p.image);
-    if (activeList.length === 0) return;
-    const currentIndex = activeList.findIndex(p => p.id === lightboxProduct.id);
-    if (currentIndex === -1) return;
-    const nextIndex = (currentIndex + 1) % activeList.length;
-    setLightboxProduct(activeList[nextIndex]);
-    setZoomScale(1);
-  };
-
-  const handlePrevLightbox = (e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    if (!lightboxProduct) return;
-    const activeList = filteredProducts.filter(p => p.image);
-    if (activeList.length === 0) return;
-    const currentIndex = activeList.findIndex(p => p.id === lightboxProduct.id);
-    if (currentIndex === -1) return;
-    const prevIndex = (currentIndex - 1 + activeList.length) % activeList.length;
-    setLightboxProduct(activeList[prevIndex]);
-    setZoomScale(1);
-  };
-
-  // Keyboard navigation
+  // Escape closes (arrow keys are handled by Swiper's Keyboard module)
+  const isLightboxOpen = lightboxIndex !== null;
   useEffect(() => {
+    if (!isLightboxOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!lightboxProduct) return;
       if (e.key === 'Escape') handleCloseLightbox();
-      if (e.key === 'ArrowRight') handleNextLightbox();
-      if (e.key === 'ArrowLeft') handlePrevLightbox();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxProduct, filteredProducts]);
+  }, [isLightboxOpen]);
+
+  // Lock body scroll while the lightbox is open
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prevOverflow; };
+  }, [isLightboxOpen]);
 
   const handleCategoryChange = (categoryCode: string) => {
     if (categoryCode === 'all') {
@@ -270,6 +79,11 @@ const Products: React.FC = () => {
 
   return (
     <div className="bg-slate-50 min-h-screen py-16">
+      <Seo
+        path="/products"
+        title="Dental Equipment Catalog | Blue Bird Dentools Guntur"
+        description="Browse dental chairs, autoclaves, X-ray units, handpieces and more at Blue Bird Dentools, Guntur. Delivery and service across Andhra Pradesh and Telangana."
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
@@ -300,7 +114,8 @@ const Products: React.FC = () => {
             <div className="relative flex-grow max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <input
-                type="text"
+                type="search"
+                aria-label="Search products by name, description or model"
                 placeholder="Search by product name, description or model..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -317,14 +132,15 @@ const Products: React.FC = () => {
 
           {/* Category Filter Tabs */}
           <div className="border-t border-slate-100 pt-6">
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-nowrap sm:flex-wrap gap-2.5 overflow-x-auto sm:overflow-visible snap-x -mx-6 px-6 sm:mx-0 sm:px-0 pb-1 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {CATEGORIES.map((cat) => {
                 const isActive = currentCategory === cat.code;
                 return (
                   <button
                     key={cat.code}
                     onClick={() => handleCategoryChange(cat.code)}
-                    className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all ${
+                    aria-pressed={isActive}
+                    className={`shrink-0 snap-start whitespace-nowrap min-h-[40px] px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all ${
                       isActive
                         ? 'bg-primary-900 text-white shadow-md shadow-primary-900/10'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70 hover:text-primary-900'
@@ -348,10 +164,11 @@ const Products: React.FC = () => {
               <motion.div
                 key={product.id}
                 layout
-                initial={{ opacity: 1, scale: 1 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ y: 24 }}
+                whileInView={{ y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4 }}
                 whileHover={{ y: -8 }}
                 className="flex flex-col bg-white rounded-2xl border border-slate-200/60 hover:border-cyan-400 hover:shadow-2xl transition-all overflow-hidden h-full"
               >
@@ -363,13 +180,17 @@ const Products: React.FC = () => {
                   {product.image ? (
                     <img 
                       src={product.image} 
-                      alt={product.name} 
+                      alt={`${product.name} – ${product.categoryLabel}`}
+                      width={1024}
+                      height={1024}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
                     />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-cyan-700" />
-                      <div className="absolute inset-0 opacity-15 mix-blend-overlay bg-cover bg-center" style={{ backgroundImage: 'url("/hero_dental.png")' }} />
+                      <div className="absolute inset-0 opacity-15 mix-blend-overlay bg-cover bg-center" style={{ backgroundImage: 'url("/hero_dental.webp")' }} />
                       <div className="text-center z-10 text-white p-6">
                         <p className="text-xs uppercase tracking-widest text-cyan-300 font-bold mb-1">{product.categoryLabel}</p>
                         <h3 className="text-xl font-bold font-sans line-clamp-1">{product.name}</h3>
@@ -453,100 +274,156 @@ const Products: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[100] flex flex-col justify-between p-4 md:p-6"
+            className="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[100] flex flex-col justify-between p-3 sm:p-4 md:p-6"
             onClick={handleCloseLightbox}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${lightboxProduct.name} image viewer`}
           >
             {/* Header controls */}
-            <div className="flex items-center justify-between w-full text-white z-10" onClick={e => e.stopPropagation()}>
-              <div>
-                <p className="text-xs uppercase tracking-widest text-cyan-400 font-bold">{lightboxProduct.categoryLabel}</p>
-                <h3 className="text-lg md:text-xl font-bold">{lightboxProduct.name}</h3>
-                <p className="text-xs text-slate-400 font-semibold">{lightboxProduct.modelCode}</p>
-              </div>
+            <div className="flex items-center justify-between gap-3 w-full text-white z-10" onClick={e => e.stopPropagation()}>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={lightboxProduct.id}
+                  initial={{ y: 8 }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="min-w-0 flex-1"
+                >
+                  <p className="text-xs uppercase tracking-widest text-cyan-400 font-bold truncate">{lightboxProduct.categoryLabel}</p>
+                  <h2 className="text-base sm:text-lg md:text-xl font-bold truncate">{lightboxProduct.name}</h2>
+                  <p className="text-xs text-slate-400 font-semibold truncate">{lightboxProduct.modelCode} · {activeIndex + 1} / {gallery.length}</p>
+                </motion.div>
+              </AnimatePresence>
 
-              <div className="flex items-center space-x-2.5">
-                {/* Zoom controls */}
+              <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                {/* Zoom controls (Swiper Zoom module; double-tap / pinch also work) */}
                 <button
-                  onClick={() => setZoomScale(s => Math.min(s + 0.25, 3.5))}
+                  onClick={() => mainSwiper?.zoom.in(Math.min(zoomScale + 1, 3))}
                   className="p-2.5 bg-slate-800/80 hover:bg-cyan-600 hover:text-white rounded-xl transition-all shadow-md active:scale-95"
                   title="Zoom In"
+                  aria-label="Zoom In"
                 >
                   <ZoomIn className="h-5 w-5" />
                 </button>
                 <button
-                  onClick={() => setZoomScale(s => Math.max(s - 0.25, 1))}
+                  onClick={() => (zoomScale > 2 ? mainSwiper?.zoom.in(zoomScale - 1) : mainSwiper?.zoom.out())}
                   className="p-2.5 bg-slate-800/80 hover:bg-cyan-600 hover:text-white rounded-xl transition-all shadow-md active:scale-95"
                   title="Zoom Out"
+                  aria-label="Zoom Out"
                 >
                   <ZoomOut className="h-5 w-5" />
                 </button>
                 <button
-                  onClick={() => setZoomScale(1)}
+                  onClick={() => mainSwiper?.zoom.out()}
                   className="p-2.5 bg-slate-800/80 hover:bg-cyan-600 hover:text-white rounded-xl transition-all shadow-md active:scale-95"
                   title="Reset Zoom"
+                  aria-label="Reset Zoom"
                 >
                   <RotateCcw className="h-5 w-5" />
                 </button>
-                
-                <span className="h-6 w-px bg-slate-800" />
+
+                <span className="hidden sm:block h-6 w-px bg-slate-800" />
 
                 {/* Close Button */}
-                <button
+                <motion.button
+                  whileHover={{ rotate: 90 }}
                   onClick={handleCloseLightbox}
-                  className="p-2.5 bg-slate-800/80 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-md active:scale-95"
+                  className="p-2.5 bg-slate-800/80 hover:bg-red-600 hover:text-white rounded-xl transition-colors shadow-md"
                   title="Close (Esc)"
+                  aria-label="Close"
                 >
                   <X className="h-5 w-5" />
-                </button>
+                </motion.button>
               </div>
             </div>
 
-            {/* Central area with arrows and image */}
-            <div className="flex-grow flex items-center justify-between relative w-full h-full overflow-hidden my-4">
-              {/* Prev Button */}
+            {/* Main gallery */}
+            <motion.div
+              initial={{ scale: 0.94, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.94, y: 20 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+              className="flex-grow relative w-full min-h-0 my-3 sm:my-4"
+              onClick={e => e.stopPropagation()}
+            >
               <button
-                onClick={handlePrevLightbox}
-                className="absolute left-2 md:left-6 p-3 bg-slate-900/60 hover:bg-cyan-600/90 text-white rounded-2xl transition-all shadow-xl hover:scale-105 border border-slate-800/50 z-20"
+                aria-label="Previous product image"
+                className="lightbox-prev hidden sm:flex absolute left-2 md:left-6 top-1/2 -translate-y-1/2 p-3 bg-slate-900/60 hover:bg-cyan-600/90 text-white rounded-2xl transition-colors shadow-xl border border-slate-800/50 z-20"
                 title="Previous (Left Arrow)"
               >
                 <ChevronLeft className="h-6 w-6 md:h-8 md:w-8" />
               </button>
 
-              {/* Image viewport */}
-              <div 
-                className="w-full h-[70vh] flex items-center justify-center overflow-auto pointer-events-auto"
-                onClick={e => e.stopPropagation()}
+              <Swiper
+                modules={[Zoom, Navigation, Keyboard, Thumbs, A11y]}
+                initialSlide={lightboxIndex ?? 0}
+                onSwiper={setMainSwiper}
+                onSlideChange={(sw) => { setActiveIndex(sw.activeIndex); setZoomScale(1); }}
+                onZoomChange={(_sw, scale) => setZoomScale(scale)}
+                zoom={{ maxRatio: 3, toggle: true }}
+                navigation={{ prevEl: '.lightbox-prev', nextEl: '.lightbox-next' }}
+                keyboard={{ enabled: true }}
+                thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                spaceBetween={24}
+                className="h-full"
               >
-                <div 
-                  className="flex items-center justify-center p-4 max-w-full max-h-full cursor-grab active:cursor-grabbing transition-transform duration-200"
-                  style={{ transform: `scale(${zoomScale})` }}
-                >
-                  <div className="bg-white p-6 rounded-2xl shadow-2xl border border-slate-700/40 max-w-[90vw] max-h-[65vh] flex items-center justify-center">
-                    <img
-                      src={lightboxProduct.image}
-                      alt={lightboxProduct.name}
-                      className="max-w-full max-h-[55vh] object-contain select-none pointer-events-none mix-blend-multiply"
-                    />
-                  </div>
-                </div>
-              </div>
+                {gallery.map((product) => (
+                  <SwiperSlide key={product.id} className="!flex items-center justify-center">
+                    <div className="swiper-zoom-container">
+                      <div className="bg-white p-3 sm:p-6 rounded-2xl shadow-2xl max-w-[92vw] sm:max-w-[80vw]">
+                        <img
+                          src={product.image}
+                          alt={`${product.name} – ${product.categoryLabel}`}
+                          width={1024}
+                          height={1024}
+                          decoding="async"
+                          className="max-h-[48vh] sm:max-h-[55vh] w-auto h-auto object-contain select-none mix-blend-multiply"
+                        />
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
 
-              {/* Next Button */}
               <button
-                onClick={handleNextLightbox}
-                className="absolute right-2 md:right-6 p-3 bg-slate-900/60 hover:bg-cyan-600/90 text-white rounded-2xl transition-all shadow-xl hover:scale-105 border border-slate-800/50 z-20"
+                aria-label="Next product image"
+                className="lightbox-next hidden sm:flex absolute right-2 md:right-6 top-1/2 -translate-y-1/2 p-3 bg-slate-900/60 hover:bg-cyan-600/90 text-white rounded-2xl transition-colors shadow-xl border border-slate-800/50 z-20"
                 title="Next (Right Arrow)"
               >
                 <ChevronRight className="h-6 w-6 md:h-8 md:w-8" />
               </button>
-            </div>
+            </motion.div>
 
-            {/* Bottom info bar */}
-            <div className="text-center w-full text-slate-400 text-xs sm:text-sm py-2 z-10" onClick={e => e.stopPropagation()}>
-              <p className="max-w-2xl mx-auto line-clamp-2">{lightboxProduct.description}</p>
-              <div className="mt-2 text-cyan-400 font-bold">
-                Zoom: {zoomScale.toFixed(2)}x
-              </div>
+            {/* Bottom: description + thumbnail strip */}
+            <div className="w-full z-10" onClick={e => e.stopPropagation()}>
+              <p className="max-w-2xl mx-auto text-center text-slate-400 text-xs sm:text-sm line-clamp-2">{lightboxProduct.description}</p>
+              <p className="mt-1 text-center text-cyan-400 text-xs font-bold">
+                Zoom: {zoomScale.toFixed(1)}x <span className="text-slate-500 font-medium">· double-tap or pinch to zoom, swipe to browse</span>
+              </p>
+              <Swiper
+                modules={[FreeMode, Thumbs]}
+                onSwiper={setThumbsSwiper}
+                watchSlidesProgress
+                freeMode
+                slidesPerView="auto"
+                spaceBetween={8}
+                className="mt-3 max-w-3xl mx-auto"
+              >
+                {gallery.map((product) => (
+                  <SwiperSlide key={product.id} className="!w-14 sm:!w-16 opacity-50 [&.swiper-slide-thumb-active]:opacity-100 transition-opacity cursor-pointer">
+                    <img
+                      src={product.image}
+                      alt=""
+                      width={64}
+                      height={64}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-14 w-14 sm:h-16 sm:w-16 object-cover rounded-lg"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
           </motion.div>
         )}

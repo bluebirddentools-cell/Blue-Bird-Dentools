@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -45,4 +44,16 @@
 /* Smooth page container minimum height */
 .page-container {
   min-height: calc(100vh - 4.5rem - 24rem); /* Adjust based on navbar and footer heights */
+}
+
+/* Hero slideshow: slow zoom on the active slide (Ken Burns) */
+.hero-kenburns .swiper-slide img {
+  transform: scale(1);
+  transition: transform 7s ease-out;
+}
+.hero-kenburns .swiper-slide-active img {
+  transform: scale(1.12);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-kenburns .swiper-slide img { transition: none; transform: none; }
 }

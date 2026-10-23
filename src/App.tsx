@@ -1,16 +1,16 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import Layout from './components/Layout';
 import Home from './pages/Home';
-import Products from './pages/Products';
-import Services from './pages/Services';
-import About from './pages/About';
-import Contact from './pages/Contact';
 
+// Route-level `lazy`: the router waits for the chunk before switching pages, so no blank Suspense flash.
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
+    // Initial load of a lazy route renders nothing until its chunk arrives (no SSR); silences the dev warning.
+    HydrateFallback: () => null,
     children: [
       {
         index: true,
@@ -18,19 +18,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'products',
-        element: <Products />,
+        lazy: async () => ({ Component: (await import('./pages/Products')).default }),
       },
       {
         path: 'services',
-        element: <Services />,
+        lazy: async () => ({ Component: (await import('./pages/Services')).default }),
       },
       {
         path: 'about',
-        element: <About />,
+        lazy: async () => ({ Component: (await import('./pages/About')).default }),
       },
       {
         path: 'contact',
-        element: <Contact />,
+        lazy: async () => ({ Component: (await import('./pages/Contact')).default }),
       },
       {
         path: '*',
@@ -41,7 +41,11 @@ const router = createBrowserRouter([
 ]);
 
 const App: React.FC = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <MotionConfig reducedMotion="user">
+      <RouterProvider router={router} />
+    </MotionConfig>
+  );
 };
 
 export default App;

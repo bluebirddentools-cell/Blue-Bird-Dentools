@@ -9,16 +9,28 @@ const Navbar: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close the drawer on route change (covers back/forward too)
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  // While open: lock body scroll, Escape closes
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setIsOpen(false);
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen]);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -32,10 +44,15 @@ const Navbar: React.FC = () => {
 
   return (
     <>
+      <header>
       {/* Top Regional Notice Banner */}
       <div className="fixed top-0 left-0 right-0 h-9 bg-gradient-to-r from-primary-950 via-primary-900 to-cyan-950 text-white text-center flex items-center justify-center text-[10px] sm:text-xs font-semibold px-4 z-50 border-b border-cyan-500/20">
-        <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse mr-2"></span>
-        <span>Sales & Services Available Exclusively in Andhra Pradesh & Telangana</span>
+        <span className="inline-block w-2 h-2 shrink-0 rounded-full bg-cyan-400 animate-pulse mr-2"></span>
+        <span className="truncate">
+          <span className="hidden sm:inline">Sales & Services Available Exclusively in </span>
+          <span className="sm:hidden">Sales & Service in </span>
+          Andhra Pradesh & Telangana
+        </span>
       </div>
 
       <nav
@@ -50,8 +67,10 @@ const Navbar: React.FC = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 group">
               <img 
-                src="/logo.jpg" 
+                src="/logo.webp" 
                 alt="Blue Bird Dentools Logo" 
+                width={40}
+                height={40}
                 className="h-10 w-10 object-contain rounded-full shadow-md border border-slate-200/40 group-hover:scale-105 transition-all duration-300"
               />
               <div>
@@ -105,17 +124,20 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center space-x-4">
+            <div className="flex md:hidden items-center space-x-2 sm:space-x-4">
               <a
                 href="tel:+919000280015"
-                className="p-2 text-primary-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                aria-label="Call +91 9000280015"
+                className="p-3 text-primary-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
               >
                 <Phone className="h-4 w-4" />
               </a>
               <button
                 onClick={toggleMenu}
                 className="p-2 text-primary-900 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none"
-                aria-label="Toggle menu"
+                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isOpen}
+                aria-controls="mobile-menu"
               >
                 {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -123,6 +145,7 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </nav>
+      </header>
 
       {/* Mobile Drawer Menu - Moved outside <nav> to prevent backdrop-filter containing block issues */}
       <AnimatePresence>
@@ -140,6 +163,7 @@ const Navbar: React.FC = () => {
             />
             {/* Content Drawer */}
             <motion.div
+              id="mobile-menu"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -150,11 +174,16 @@ const Navbar: React.FC = () => {
             >
               <div className="space-y-6">
                 <div className="flex flex-col space-y-4">
-                  {navLinks.map((link) => {
+                  {navLinks.map((link, i) => {
                     const isActive = location.pathname === link.path;
                     return (
-                      <Link
+                      <motion.div
                         key={link.path}
+                        initial={{ x: 24 }}
+                        animate={{ x: 0 }}
+                        transition={{ duration: 0.3, delay: i * 0.03 }}
+                      >
+                      <Link
                         to={link.path}
                         onClick={toggleMenu}
                         className={`block px-4 py-3 rounded-xl text-base font-semibold transition-all ${
@@ -165,6 +194,7 @@ const Navbar: React.FC = () => {
                       >
                         {link.name}
                       </Link>
+                      </motion.div>
                     );
                   })}
                 </div>

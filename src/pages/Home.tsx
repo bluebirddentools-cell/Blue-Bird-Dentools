@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView, animate } from 'framer-motion';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, Navigation, A11y, Keyboard, EffectFade, FreeMode } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
+import 'swiper/css/free-mode';
 import { 
   ShoppingBag, 
   Wrench, 
@@ -15,25 +21,52 @@ import {
   Activity, 
   Scan, 
   Settings, 
-  ShieldAlert 
+  ShieldAlert,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
+import Seo from '../components/Seo';
+import { PRODUCTS_DATA } from '../data/products';
+
+const HERO_SLIDES = ['/hero_dental.webp', '/images/dental_chair.webp', '/images/wallmount_xray.webp', '/images/bclass_autoclave.webp'];
+
+const TRUST_BADGES = ['ISO 9001 CERTIFIED', 'CE COMPLIANT', 'FDA ACCREDITED DEPT', 'AADA REGISTERED', 'GENUINE SPARE PARTS', 'AP & TELANGANA SERVICE'];
+
+// Counts up from 0 once scrolled into view; renders the final value first so content is never empty.
+const CountUp: React.FC<{ to: number; prefix?: string; suffix?: string }> = ({ to, prefix = '', suffix = '' }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  useEffect(() => {
+    if (!inView || !ref.current) return;
+    const node = ref.current;
+    const controls = animate(0, to, {
+      duration: 1.4,
+      ease: 'easeOut',
+      onUpdate: (v) => { node.textContent = `${prefix}${Math.round(v)}${suffix}`; },
+    });
+    return () => controls.stop();
+  }, [inView, to, prefix, suffix]);
+  return <span ref={ref}>{`${prefix}${to}${suffix}`}</span>;
+};
 
 const Home: React.FC = () => {
-  // Animation presets
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroTextY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const heroBgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+
+  // Animation presets (transform-only: content is never hidden)
   const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } }
+    hidden: { y: 24 },
+    visible: { y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } }
   };
 
   const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15
-      }
-    }
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.08 } }
   };
+
+  const reveal = { initial: 'hidden', whileInView: 'visible', viewport: { once: true, amount: 0.2 } } as const;
 
   const categories = [
     { name: 'Furniture & Units', code: 'furniture', icon: Activity, desc: 'Dental chairs and ergonomic units' },
@@ -45,21 +78,49 @@ const Home: React.FC = () => {
 
   return (
     <div className="relative overflow-hidden">
-      
+      <Seo
+        path="/"
+        title="Dental Equipment Sales & Repair in Guntur | Blue Bird Dentools"
+        description="Guntur-based Blue Bird Dentools supplies dental chairs, X-rays, autoclaves and handpieces, plus repair and AMC service across Andhra Pradesh & Telangana."
+      />
+
       {/* 1. Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center bg-slate-900 text-white">
-        {/* Background Image with Dark Blue Radial Overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 mix-blend-luminosity" 
-          style={{ backgroundImage: 'url("/hero_dental.png")' }}
-        />
+      <section ref={heroRef} className="relative min-h-[70vh] sm:min-h-[85vh] flex items-center bg-slate-900 text-white overflow-hidden">
+        {/* Background slideshow (crossfade + slow zoom) with Dark Blue Radial Overlay */}
+        <motion.div style={{ scale: heroBgScale }} className="absolute inset-0 opacity-40 mix-blend-luminosity" aria-hidden="true">
+          <Swiper
+            modules={[Autoplay, EffectFade]}
+            effect="fade"
+            fadeEffect={{ crossFade: true }}
+            loop
+            speed={1500}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            allowTouchMove={false}
+            className="h-full hero-kenburns"
+          >
+            {HERO_SLIDES.map((src, i) => (
+              <SwiperSlide key={src}>
+                <img
+                  src={src}
+                  alt=""
+                  width={1024}
+                  height={1024}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={i === 0 ? 'high' : 'auto'}
+                  decoding="async"
+                  className="w-full h-full object-cover object-center"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </motion.div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-transparent" />
         
         {/* Decorative Light Glows */}
         <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-1/4 left-10 w-80 h-80 bg-primary-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 z-10 w-full">
+        <motion.div style={{ y: heroTextY }} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 z-10 w-full">
           <div className="max-w-3xl">
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
@@ -121,27 +182,35 @@ const Home: React.FC = () => {
               </Link>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Scroll cue */}
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          className="hidden sm:flex absolute bottom-6 left-1/2 -ml-3 z-10 h-10 w-6 rounded-full border-2 border-white/30 justify-center pt-2"
+          aria-hidden="true"
+        >
+          <span className="h-2 w-1 rounded-full bg-cyan-400" />
+        </motion.div>
       </section>
 
       {/* 2. Core Services Preview */}
-      <section className="py-24 bg-white">
+      <section className="py-16 sm:py-20 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-cyan-600 font-bold">What We Do</h2>
-            <p className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900">Core Services For Clinics & Labs</p>
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <p className="text-xs uppercase tracking-widest text-cyan-600 font-bold">What We Do</p>
+            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900">Core Services For Clinics & Labs</h2>
             <p className="mt-4 text-slate-500">We offer end-to-end solutions, helping clinics source the right equipment and keeping it operational year-round.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Sales Card */}
             <motion.div 
-              viewport={{ once: true }}
-              initial="visible"
-              animate="visible"
+              {...reveal}
               variants={fadeInUp}
               whileHover={{ y: -8 }}
-              className="relative p-8 rounded-2xl bg-gradient-to-br from-primary-50 to-white border border-primary-100 shadow-xl overflow-hidden group"
+              className="relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-primary-50 to-white border border-primary-100 shadow-xl overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary-100 rounded-full translate-x-12 -translate-y-12 group-hover:scale-125 transition-transform duration-500 opacity-50" />
               <div className="p-4 bg-primary-900 text-white rounded-xl inline-block mb-6 shadow-md shadow-primary-900/10">
@@ -164,12 +233,10 @@ const Home: React.FC = () => {
 
             {/* Repair & Servicing Card */}
             <motion.div 
-              viewport={{ once: true }}
-              initial="visible"
-              animate="visible"
+              {...reveal}
               variants={fadeInUp}
               whileHover={{ y: -8 }}
-              className="relative p-8 rounded-2xl bg-gradient-to-br from-cyan-50/50 to-white border border-cyan-100/70 shadow-xl overflow-hidden group"
+              className="relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-cyan-50/50 to-white border border-cyan-100/70 shadow-xl overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-100 rounded-full translate-x-12 -translate-y-12 group-hover:scale-125 transition-transform duration-500 opacity-40" />
               <div className="p-4 bg-cyan-500 text-white rounded-xl inline-block mb-6 shadow-md shadow-cyan-500/10">
@@ -193,64 +260,157 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. Featured Categories Preview */}
-      <section className="py-24 bg-slate-50 border-t border-b border-slate-100">
+      {/* Featured Equipment Carousel */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Product Categories</h2>
-            <p className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900">Find What You Need</p>
+          <div className="flex items-end justify-between gap-4 mb-10 sm:mb-12">
+            <div className="max-w-2xl">
+              <p className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Featured Equipment</p>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900">Popular With Clinics & Labs</h2>
+            </div>
+            <div className="hidden md:flex gap-3 shrink-0">
+              <button type="button" aria-label="Previous products" className="featured-prev h-11 w-11 flex items-center justify-center rounded-full bg-white border border-slate-200 text-primary-900 hover:bg-primary-900 hover:text-white transition-colors">
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button type="button" aria-label="Next products" className="featured-next h-11 w-11 flex items-center justify-center rounded-full bg-white border border-slate-200 text-primary-900 hover:bg-primary-900 hover:text-white transition-colors">
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+
+          <Swiper
+            modules={[Autoplay, Pagination, Navigation, A11y, Keyboard]}
+            loop
+            autoplay={{ delay: 3500, pauseOnMouseEnter: true, disableOnInteraction: false }}
+            pagination={{ clickable: true }}
+            navigation={{ prevEl: '.featured-prev', nextEl: '.featured-next' }}
+            keyboard={{ enabled: true }}
+            breakpoints={{
+              0: { slidesPerView: 1.15, spaceBetween: 16 },
+              640: { slidesPerView: 2, spaceBetween: 16 },
+              1024: { slidesPerView: 3, spaceBetween: 16 },
+              1280: { slidesPerView: 4, spaceBetween: 24 }
+            }}
+            className="!pt-2 !pb-12 [--swiper-theme-color:#06b6d4]"
+          >
+            {PRODUCTS_DATA.map((product) => (
+              <SwiperSlide key={product.id} className="!h-auto">
+                <motion.div whileHover={{ y: -6 }} className="h-full flex flex-col bg-white rounded-2xl border border-slate-200/60 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
+                  <Link to={`/products?category=${product.category}`} className="block bg-slate-100">
+                    <img
+                      src={product.image}
+                      alt={`${product.name} - ${product.categoryLabel} by Blue Bird Dentools`}
+                      width={1024}
+                      height={1024}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full aspect-square object-cover"
+                    />
+                  </Link>
+                  <div className="flex flex-col flex-1 p-5">
+                    <p className="text-xs uppercase tracking-widest text-cyan-600 font-bold">{product.categoryLabel}</p>
+                    <h3 className="mt-2 text-base font-bold text-primary-900 leading-snug">
+                      <Link to={`/products?category=${product.category}`} className="hover:text-cyan-600 transition-colors">{product.name}</Link>
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-400">Model: {product.modelCode}</p>
+                    <Link
+                      to={`/contact?type=sales&product=${encodeURIComponent(product.name)}`}
+                      className="mt-auto pt-4 inline-flex items-center min-h-[40px] text-sm font-bold text-primary-900 hover:text-cyan-600 group"
+                    >
+                      Inquire
+                      <ArrowRight className="h-4 w-4 ml-1.5 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </section>
+
+      {/* 3. Featured Categories Preview */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-slate-50 border-t border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <p className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Product Categories</p>
+            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900">Find What You Need</h2>
             <p className="mt-4 text-slate-500">Explore our comprehensive catalog structured to quickly connect you with clinical equipment.</p>
           </div>
 
-          <motion.div 
-            viewport={{ once: true }}
-            initial="visible"
-            animate="visible"
-            variants={staggerContainer}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"
+          <Swiper
+            modules={[FreeMode, Pagination, A11y]}
+            freeMode={{ enabled: true, sticky: true }}
+            pagination={{ clickable: true }}
+            grabCursor
+            breakpoints={{
+              0: { slidesPerView: 1.4, spaceBetween: 16 },
+              480: { slidesPerView: 2.2, spaceBetween: 16 },
+              768: { slidesPerView: 3.2, spaceBetween: 20 },
+              1024: { slidesPerView: 5, spaceBetween: 24 }
+            }}
+            className="!pt-2 !pb-12 lg:!pb-2 [--swiper-theme-color:#06b6d4] lg:[&_.swiper-pagination]:hidden"
           >
             {categories.map((cat, idx) => {
               const Icon = cat.icon;
               return (
-                <motion.div key={idx} variants={fadeInUp}>
-                  <Link
-                    to={`/products?category=${cat.code}`}
-                    className="flex flex-col items-center text-center p-6 bg-white rounded-xl border border-slate-200/60 hover:border-cyan-400 hover:shadow-xl transition-all h-full group"
+                <SwiperSlide key={cat.code} className="!h-auto">
+                  <motion.div
+                    initial={{ y: 24 }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.5, delay: Math.min(idx * 0.04, 0.15) }}
+                    whileHover={{ y: -6 }}
+                    className="h-full"
                   >
-                    <div className="p-4 bg-slate-50 text-primary-900 rounded-2xl group-hover:bg-primary-900 group-hover:text-white transition-all duration-300">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="mt-4 text-base font-bold text-primary-900 group-hover:text-cyan-600 transition-colors">{cat.name}</h3>
-                    <p className="mt-2 text-xs text-slate-400 leading-relaxed">{cat.desc}</p>
-                  </Link>
-                </motion.div>
+                    <Link
+                      to={`/products?category=${cat.code}`}
+                      className="flex flex-col items-center text-center p-6 bg-white rounded-xl border border-slate-200/60 hover:border-cyan-400 hover:shadow-xl transition-all h-full group"
+                    >
+                      <motion.div
+                        whileHover={{ rotate: [0, -10, 10, 0] }}
+                        transition={{ duration: 0.5 }}
+                        className="p-4 bg-slate-50 text-primary-900 rounded-2xl group-hover:bg-primary-900 group-hover:text-white transition-colors duration-300"
+                      >
+                        <Icon className="h-6 w-6" />
+                      </motion.div>
+                      <h3 className="mt-4 text-base font-bold text-primary-900 group-hover:text-cyan-600 transition-colors">{cat.name}</h3>
+                      <p className="mt-2 text-xs text-slate-400 leading-relaxed">{cat.desc}</p>
+                    </Link>
+                  </motion.div>
+                </SwiperSlide>
               );
             })}
-          </motion.div>
+          </Swiper>
         </div>
       </section>
 
       {/* 4. Why Choose Us Section */}
-      <section className="py-24 bg-white">
+      <section className="py-16 sm:py-20 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Visual Column */}
             <div className="relative">
               {/* Decorative Card Elements */}
               <div className="absolute -top-6 -left-6 w-48 h-48 bg-cyan-100 rounded-3xl -z-10" />
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-primary-100 rounded-3xl -z-10" />
               
-              <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden">
+              <motion.div
+                initial={{ rotate: -2, y: 24 }}
+                whileInView={{ rotate: 0, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ type: 'spring', stiffness: 90, damping: 14 }}
+                className="bg-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden"
+              >
                 <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full translate-x-20 -translate-y-20 blur-[80px]" />
                 <h3 className="text-2xl font-bold mb-6">Our Support Metrics</h3>
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                     <span className="text-slate-400">Response Time</span>
-                    <span className="text-cyan-400 font-bold text-lg">&lt; 4 Hours</span>
+                    <span className="text-cyan-400 font-bold text-lg"><CountUp to={4} prefix="< " suffix=" Hours" /></span>
                   </div>
                   <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                     <span className="text-slate-400">Spare Parts Authenticity</span>
-                    <span className="text-cyan-400 font-bold text-lg">100% Genuine</span>
+                    <span className="text-cyan-400 font-bold text-lg"><CountUp to={100} suffix="% Genuine" /></span>
                   </div>
                   <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                     <span className="text-slate-400">Certified Repair Engineers</span>
@@ -258,73 +418,82 @@ const Home: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400">Clinics Served</span>
-                    <span className="text-cyan-400 font-bold text-lg">500+ Nationwide</span>
+                    <span className="text-cyan-400 font-bold text-lg"><CountUp to={500} suffix="+ Nationwide" /></span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
             {/* Highlights Column */}
             <div>
-              <h2 className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Why Choose Us</h2>
-              <p className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900 leading-tight">Uncompromising Standards In Dental Care Infrastructure</p>
+              <p className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Why Choose Us</p>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900 leading-tight">Uncompromising Standards In Dental Care Infrastructure</h2>
               <p className="mt-4 text-slate-500">Every piece of hardware we supply, and every service task we perform, adheres to strict medical compliance and clinic optimization guidelines.</p>
 
-              <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                <div className="flex items-start space-x-3">
+              <motion.div {...reveal} variants={staggerContainer} className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <motion.div variants={fadeInUp} className="flex items-start space-x-3">
                   <div className="p-2.5 bg-primary-50 rounded-lg text-primary-900 mt-1">
                     <ShieldCheck className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-primary-900 text-sm">Genuine Spare Parts</h4>
+                    <h3 className="font-bold text-primary-900 text-sm">Genuine Spare Parts</h3>
                     <p className="mt-1 text-xs text-slate-500 leading-relaxed">No generic components. We supply certified parts sourced directly from manufacturers.</p>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="flex items-start space-x-3">
+                <motion.div variants={fadeInUp} className="flex items-start space-x-3">
                   <div className="p-2.5 bg-primary-50 rounded-lg text-primary-900 mt-1">
                     <Clock className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-primary-900 text-sm">Fast Turnaround</h4>
+                    <h3 className="font-bold text-primary-900 text-sm">Fast Turnaround</h3>
                     <p className="mt-1 text-xs text-slate-500 leading-relaxed">Minimize patient rescheduling with our same-day diagnosis and prompt dispatch.</p>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="flex items-start space-x-3">
+                <motion.div variants={fadeInUp} className="flex items-start space-x-3">
                   <div className="p-2.5 bg-primary-50 rounded-lg text-primary-900 mt-1">
                     <UserCheck className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-primary-900 text-sm">Certified Engineers</h4>
+                    <h3 className="font-bold text-primary-900 text-sm">Certified Engineers</h3>
                     <p className="mt-1 text-xs text-slate-500 leading-relaxed">Highly trained technicians specialize in calibration, autoclave testing, and motors.</p>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="flex items-start space-x-3">
+                <motion.div variants={fadeInUp} className="flex items-start space-x-3">
                   <div className="p-2.5 bg-primary-50 rounded-lg text-primary-900 mt-1">
                     <Award className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-primary-900 text-sm">Wide Selection</h4>
+                    <h3 className="font-bold text-primary-900 text-sm">Wide Selection</h3>
                     <p className="mt-1 text-xs text-slate-500 leading-relaxed">A complete inventory of chairs, x-ray units, autoclaves, and handpieces.</p>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
       {/* 5. Testimonials & Clinic Trust Badges */}
-      <section className="py-24 bg-slate-50 border-t border-slate-200/40">
+      <section className="py-16 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-200/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Trusted Reviews</h2>
-            <p className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900">What Clinic Directors Say</p>
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <p className="text-xs uppercase tracking-widest text-cyan-600 font-bold">Trusted Reviews</p>
+            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-primary-900">What Clinic Directors Say</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Swiper
+            modules={[Autoplay, Pagination, A11y]}
+            autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            grabCursor
+            pagination={{ clickable: true }}
+            autoHeight={false}
+            spaceBetween={24}
+            breakpoints={{ 0: { slidesPerView: 1 }, 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }}
+            className="!pt-2 !pb-12 [--swiper-theme-color:#06b6d4]"
+          >
             {[
               {
                 text: "Blue Bird Dentools saved our practice from a major issue when our autoclave shut down. Their technician arrived within 3 hours, replaced the pressure gasket, and calibrated the unit. A lifesaver!",
@@ -342,7 +511,8 @@ const Home: React.FC = () => {
                 title: "Senior Partner, Metro Dental Clinics"
               }
             ].map((t, idx) => (
-              <div key={idx} className="p-8 bg-white rounded-2xl border border-slate-200/60 shadow-lg flex flex-col justify-between h-full">
+              <SwiperSlide key={idx} className="!h-auto">
+              <motion.div whileHover={{ y: -6 }} className="p-6 sm:p-8 bg-white rounded-2xl border border-slate-200/60 shadow-lg hover:shadow-xl transition-shadow flex flex-col justify-between h-full">
                 <div>
                   <div className="flex space-x-1 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -355,16 +525,34 @@ const Home: React.FC = () => {
                   <p className="font-bold text-primary-900 text-sm">{t.author}</p>
                   <p className="text-xs text-slate-400 mt-0.5">{t.title}</p>
                 </div>
-              </div>
+              </motion.div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
 
           {/* Trust Badges */}
-          <div className="mt-16 pt-12 border-t border-slate-200/50 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all">
-            <span className="font-bold text-sm text-slate-400 select-none uppercase tracking-widest">ISO 9001 CERTIFIED</span>
-            <span className="font-bold text-sm text-slate-400 select-none uppercase tracking-widest">CE COMPLIANT</span>
-            <span className="font-bold text-sm text-slate-400 select-none uppercase tracking-widest">FDA ACCREDITED DEPT</span>
-            <span className="font-bold text-sm text-slate-400 select-none uppercase tracking-widest">AADA REGISTERED</span>
+          {/* Trust Badges marquee */}
+          <div className="mt-12 sm:mt-16 pt-10 sm:pt-12 border-t border-slate-200/50 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <Swiper
+              modules={[Autoplay, FreeMode]}
+              loop
+              freeMode
+              slidesPerView="auto"
+              spaceBetween={48}
+              speed={5000}
+              autoplay={{ delay: 0, disableOnInteraction: false }}
+              allowTouchMove={false}
+              className="[&_.swiper-wrapper]:!ease-linear"
+            >
+              {[...TRUST_BADGES, ...TRUST_BADGES].map((badge, i) => (
+                <SwiperSlide key={i} className="!w-auto">
+                  <span className="flex items-center gap-2 font-bold text-sm text-slate-400 select-none uppercase tracking-widest whitespace-nowrap">
+                    <ShieldCheck className="h-4 w-4 text-cyan-500" />
+                    {badge}
+                  </span>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       </section>
